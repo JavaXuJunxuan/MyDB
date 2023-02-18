@@ -1,12 +1,7 @@
 package com.xjx.mydb.server.common;
 
-import com.sun.org.apache.xpath.internal.operations.Gt;
 import com.xjx.mydb.common.Error;
-import sun.rmi.runtime.Log;
-
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,16 +9,16 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @Author: Xjx
  * @Create: 2022/12/22 - 14:29
- * AbstractCache 实现了一个引用计数策略的缓存,泛型类，泛型是缓存的数据类型
+ * AbstractCache 实现了一个引用计数策略的缓存框架，管理缓存用的。泛型类，泛型是缓存的数据类型
  */
 public abstract class AbstractCache<T> {
-    // 实际缓存的数据，key为缓存地址，value为缓存真实数据
+    // 实际缓存的数据，key为磁盘上实际数据的地址，value为缓存真实数据
     private HashMap<Long, T> cache;
     // 具体缓存数据的引用个数
     private HashMap<Long, Integer> references;
-    // 记录哪些资源正在从数据源中。因为从数据源获取资源是一个相对费时的操作
+    // 记录哪些资源正在从数据源中获取。因为从数据源获取资源是一个相对费时的操作
     private HashMap<Long, Boolean> getting;
-    // 缓存的最大缓存资源数
+    // 缓存的最大缓存大小
     private int maxResource;
     // 缓存中元素的个数
     private int count = 0;
@@ -97,7 +92,7 @@ public abstract class AbstractCache<T> {
     }
 
     /**
-     * 强行释放一个缓存
+     * 根据key即数据源上数据地址强行释放一个其对应的缓存数据
      */
     protected void release(long key) {
         lock.lock();
