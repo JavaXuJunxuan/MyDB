@@ -42,7 +42,7 @@ public class TransactionManagerTest {
         cdl = new CountDownLatch(noWorkers);
         for(int i = 0; i < noWorkers; i++){
             Runnable r = () -> worker();
-            new Thread(r).run();
+            new Thread(r).start();
         }
         try {
             cdl.await();
