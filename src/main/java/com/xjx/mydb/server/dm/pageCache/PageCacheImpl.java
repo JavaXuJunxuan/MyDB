@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @Create: 2022/12/24 - 09:40
  */
 public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
-    //缓存数据页的最小内存长度
+    //一个缓存数据区中最少的缓存数据页页数
     private static final int MEM_MIN_LEN = 10;
     //数据库文件的后缀
     public static final String DB_SUFFIX = ".db";
@@ -33,7 +33,7 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
     public PageCacheImpl(RandomAccessFile raf, FileChannel fc, int maxResource) {
         //执行父类AbstractCache的有参构造，设定最大缓存内存大小
         super(maxResource);
-        //如果分配缓存内存小于最小的缓存占有内存则退出
+        //如果分配的数据缓存页小于最小的缓存页则退出
         if(maxResource < MEM_MIN_LEN) {
             Panic.panic(Error.MemTooSmallException);
         }
@@ -47,7 +47,7 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         this.fc = fc;
         this.fileLock = new ReentrantLock();
         //根据读取文件的长度/每个数据页大小获取当前这个数据库文件一共多少页数据
-        this.pageNumbers = new AtomicInteger((int)length / Page_SIZE);
+        this.pageNumbers = new AtomicInteger((int)length / PAGE_SIZE);
     }
 
     //给当前缓存页新增的缓存数据创建新的缓存页，即新建的缓存数据在原有页中存不下了，需要新建数据页
@@ -80,8 +80,8 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         }
     }
 
-    private long pageOffset(int pgno) {
-        return (pgno - 1) * Page_SIZE;
+    private static long pageOffset(int pgno) {
+        return (pgno - 1) * PAGE_SIZE;
     }
 
     @Override
@@ -100,20 +100,39 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         }
     }
 
+    /**
+     * 根据pageNumber从数据库文件(通过NIO操作文件)中读取页数据，并包裹成Page
+     */
     @Override
     protected Page getForCache(long key) throws Exception {
-        return null;
+        int pgno = (int)key;
+        long offset = PageCacheImpl.pageOffset(pgno);
+        ByteBuffer buffer = ByteBuffer.allocate(PAGE_SIZE);
+        fileLock.lock();
+        try {
+            fc.position(offset);
+            fc.read(buffer);
+        } catch (IOException e) {
+            Panic.panic(e);
+        }
+        fileLock.unlock();
+        return new PageImpl(pgno, buffer.array(), this);
     }
 
+    //释放某个缓存数据页的在内存中的缓存数据
     @Override
-    protected void releaseForCache(Page obj) {
-
+    protected void releaseForCache(Page page) {
+        //如果是脏页面则要将缓存数据刷回磁盘在释放
+        if(page.isDirty()) {
+            flush(page);
+            page.setDirty(false);
+        }
     }
 
     //根据传入的缓存数据页得到其页号，然后使用AbsractCache父类的release方法释放这个缓存数据页的缓存
     //但我们项目中使用的缓存框架是引用计数框架，所以释放缓存数据实际操作是减少这个缓存数据的被引用次数，当=0时才会真正释放掉缓存数据
     @Override
-    public void release(Page page) {
+    public synchronized void release(Page page) {
         release((long)page.getPageNumber());
     }
 

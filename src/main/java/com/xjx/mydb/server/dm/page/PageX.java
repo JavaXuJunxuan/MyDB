@@ -16,11 +16,11 @@ public class PageX {
     //空闲空间偏移量大小为两个字节
     private static final short OF_DATA = 2;
     //最大空闲空间大小
-    public static final int MAX_FREE_SPACE = PageCache.Page_SIZE - OF_DATA;
+    public static final int MAX_FREE_SPACE = PageCache.PAGE_SIZE - OF_DATA;
 
     //操作数据页时模拟出一个数据页
     public static byte[] initRaw() {
-        byte[] raw = new byte[PageCache.Page_SIZE];
+        byte[] raw = new byte[PageCache.PAGE_SIZE];
         setFSO(raw, OF_DATA);
         return raw;
     }
@@ -57,7 +57,7 @@ public class PageX {
 
     //获取页面的空闲空间大小
     public static int getFreeSpace(Page page) {
-        return PageCache.Page_SIZE - (int)getFSO(page.getData());
+        return PageCache.PAGE_SIZE - (int)getFSO(page.getData());
     }
 
     //此方法实现覆盖插入数据操作：将raw插入page中的offset位置，并将page的offset设置为较大的offset即空闲空间偏移量

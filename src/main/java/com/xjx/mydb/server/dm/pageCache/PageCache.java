@@ -17,7 +17,7 @@ import java.nio.channels.FileChannel;
 //页缓存数据接口，指向缓存数据页中真正的缓存数据
 public interface PageCache {
     //定义每个数据缓存页大小为16KB
-    public static final int Page_SIZE = 1 << 14;
+    public static final int PAGE_SIZE = 1 << 14;
 
     //根据传入的字节数据创建一个新缓存数据页
     int newPage(byte[] initData);
@@ -26,7 +26,7 @@ public interface PageCache {
     //关闭数据页缓存，此时释放所有数据页缓存并写回
     void close();
     //根据传入的数据缓存页释放其缓存数据
-    void release(Page page);
+    void  release(Page page);
     //根据最大数据页号截断数据页
     void truncateByBgno(int maxPgno);
     //获取该缓存数据的缓存数据页号
@@ -56,7 +56,7 @@ public interface PageCache {
         } catch (FileNotFoundException e) {
             Panic.panic(e);
         }
-        return new PageCacheImpl(raf, fc, (int)memory / Page_SIZE);
+        return new PageCacheImpl(raf, fc, (int)memory / PAGE_SIZE);
     }
     //根据传入的地址读取磁盘上的数据并写入缓存
     public static PageCacheImpl open(String path, long memory) {
@@ -75,6 +75,6 @@ public interface PageCache {
         } catch (FileNotFoundException e) {
             Panic.panic(e);
         }
-        return new PageCacheImpl(raf, fc, (int)memory / Page_SIZE);
+        return new PageCacheImpl(raf, fc, (int)memory / PAGE_SIZE);
     }
 }

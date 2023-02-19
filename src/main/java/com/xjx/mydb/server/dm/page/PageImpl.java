@@ -62,7 +62,7 @@ public class PageImpl implements Page {
     //得到缓存数据页中存储的真正数据
     @Override
     public byte[] getData() {
-        return new byte[0];
+        return data;
     }
 }
 

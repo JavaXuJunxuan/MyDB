@@ -20,7 +20,7 @@ public abstract class AbstractCache<T> {
     private HashMap<Long, Boolean> getting;
     // 缓存的最大缓存大小
     private int maxResource;
-    // 缓存中元素的个数
+    // 缓存中缓存的个数
     private int count = 0;
     private Lock lock;
 
@@ -31,15 +31,15 @@ public abstract class AbstractCache<T> {
         getting = new HashMap<>();
         lock = new ReentrantLock();
     }
-    protected T get(long key) throws Exception {
+    protected synchronized T get(long key) throws Exception {
         //通过 get() 方法获取资源时，首先进入一个死循环，来无限尝试从缓存里获取
         while (true) {
             //获取资源时为了多线程安全
-            lock.lock();
+//            lock.lock();
             //请求的资源是否正在被其他线程获取
             if(getting.containsKey(key)){
                 //放弃锁并且睡一秒然后再次进入循环
-                lock.unlock();
+//                lock.unlock();
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
@@ -54,20 +54,20 @@ public abstract class AbstractCache<T> {
                 T obj = cache.get(key);
                 //获取到缓存资源之后要将这个缓存的引用次数+1
                 references.put(key, references.get(key) + 1);
-                lock.unlock();
+//                lock.unlock();
                 return obj;
             }
             //执行到此表示缓存中没有要获取的资源
             //判断缓存是否已经存满，如果存满就报错，因为我们是引用计数实现的缓存，是手动释放缓存数据
             if(maxResource > 0 && count == maxResource){
-                lock.unlock();
+//                lock.unlock();
                 throw Error.CacheFullException;
             }
             //执行到此处表示缓存无要获取的数据且缓存未满，此时尝试从数据源获取该资源
             count++;
             //修改这个数据的获取信息，表示此资源正在被某一个线程获取。
             getting.put(key, true);
-            lock.unlock();
+//            lock.unlock();
             //退出循环，去数据源中获取资源并写入缓存
             break;
         }
@@ -77,17 +77,17 @@ public abstract class AbstractCache<T> {
             obj = getForCache(key);
         } catch (Exception e){
             //获取失败时要回滚之前的缓存大小，此时要保证线程安全避免多减
-            lock.lock();
+//            lock.lock();
             count--;
             getting.remove(key);
-            lock.unlock();
+//            lock.unlock();
             throw e;
         }
-        lock.lock();
+//        lock.lock();
         getting.remove(key);
         cache.put(key, obj);
         references.put(key, 1);
-        lock.unlock();
+//        lock.unlock();
         return obj;
     }
 
@@ -109,6 +109,8 @@ public abstract class AbstractCache<T> {
                 //缓存表中删除这个缓存
                 cache.remove(key);
                 count--;
+            } else {
+                references.put(key, ref);
             }
         } finally {
             //保证锁的释放，以免阻塞其他线程

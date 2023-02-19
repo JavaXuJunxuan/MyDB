@@ -23,7 +23,7 @@ public class PageOne {
 
     public static byte[] InitRaw() {
         //数据库文件启动时首先模拟出第一页缓存数据页
-        byte[] raw = new byte[PageCache.Page_SIZE];
+        byte[] raw = new byte[PageCache.PAGE_SIZE];
         setVcOpen(raw);
         return raw;
     }
