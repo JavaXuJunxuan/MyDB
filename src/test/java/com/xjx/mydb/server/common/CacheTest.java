@@ -47,5 +47,8 @@ public class CacheTest {
         }
         cdl.countDown();
     }
-
+    @Test
+    public void a(){
+        System.out.println(Math.max(3,2 + 1+1));
+    }
 }
