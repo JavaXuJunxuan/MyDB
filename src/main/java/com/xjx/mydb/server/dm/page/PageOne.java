@@ -2,8 +2,6 @@ package com.xjx.mydb.server.dm.page;
 
 import com.xjx.mydb.server.dm.pageCache.PageCache;
 import com.xjx.mydb.server.utils.RandomUtil;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
