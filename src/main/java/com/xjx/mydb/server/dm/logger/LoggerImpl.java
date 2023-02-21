@@ -214,6 +214,7 @@ public class LoggerImpl implements Logger {
         }
     }
 
+    //设置当前日志操作对象的偏移量为4，即开始操作第一个日志文件
     @Override
     public void rewind() {
         position = 4;
