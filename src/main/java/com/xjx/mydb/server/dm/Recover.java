@@ -2,6 +2,7 @@ package com.xjx.mydb.server.dm;
 
 import com.google.common.primitives.Bytes;
 import com.xjx.mydb.server.common.SubArray;
+import com.xjx.mydb.server.dm.dataItem.DataItem;
 import com.xjx.mydb.server.dm.logger.Logger;
 import com.xjx.mydb.server.dm.page.Page;
 import com.xjx.mydb.server.dm.page.PageX;
@@ -193,7 +194,7 @@ public class Recover {
         UpdateLogInfo li = new UpdateLogInfo();
         //获取日志数据中的xid并解析为long类型赋值给日志对象
         li.xid = Parser.parseLong(Arrays.copyOfRange(log, OF_XID, OF_UPDATE_UID));
-        //获取日志文件对应的偏移量
+        //获取日志文件对应的偏移量,uid即日志记录数据对象的页号和偏移量组成
         long uid = Parser.parseLong(Arrays.copyOfRange(log, OF_UPDATE_UID, OF_UPDATE_RAW));
         li.offset = (short)(uid & ((1L << 16) - 1));
         uid >>>= 32;
