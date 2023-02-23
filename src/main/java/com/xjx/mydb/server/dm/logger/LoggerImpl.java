@@ -4,7 +4,6 @@ import com.google.common.primitives.Bytes;
 import com.xjx.mydb.common.Error;
 import com.xjx.mydb.server.utils.Panic;
 import com.xjx.mydb.server.utils.Parser;
-import org.ietf.jgss.Oid;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -21,9 +20,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LoggerImpl implements Logger {
     //日志文件的后缀名
     public static final String LOG_SUFFIX = ".log";
-
     //一个种子常量，用于计算日志校验和
-    private static final int SEED = 13331;
+    private static final int SEED = 123456;
     //日志起始地址（以下皆是随即数组存取方式）
     private static final int OF_SIZE = 0;
     //日志检验和数据存放地址

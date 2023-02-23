@@ -16,11 +16,11 @@ import java.nio.channels.FileChannel;
  */
 public interface TransactionManager {
     //XID文件头长度
-    public static final int XID_HEADER_LENGTH = 8;
+    int XID_HEADER_LENGTH = 8;
     //超级事务，永远为commited状态
-    public static final long SUPER_XID = 0;
+    long SUPER_XID = 0;
     //XID文件的后缀名
-    public static final String XID_SUFFIX = ".xid";
+    String XID_SUFFIX = ".xid";
 
     // 开启一个新事务
     long begin();
@@ -60,7 +60,7 @@ public interface TransactionManager {
         } catch (FileNotFoundException e) {
             Panic.panic(e);
         }
-        // 写XID文件头为空，因为新建的XID没有存储任何事务
+        //写XID文件头为空，因为新建的XID没有存储任何事务
         //把一个大小等于XID头的字节数组包装进字节缓冲中
         ByteBuffer buffer = ByteBuffer.wrap(new byte[TransactionManagerImpl.XID_HEADER_LENGTH]);
         //把字节缓冲中的数据写入XID文件
@@ -71,6 +71,7 @@ public interface TransactionManager {
         } catch (IOException ioException) {
             Panic.panic(ioException);
         }
+        //将这个新建的事务文件对应的事务管理器返回参数就是对应事务文件的IO操作对象
         return new TransactionManagerImpl(raf,fc);
     }
 

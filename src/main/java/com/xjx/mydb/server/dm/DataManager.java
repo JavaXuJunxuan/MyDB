@@ -15,7 +15,7 @@ public interface DataManager {
     //因此我们只需要实现读和插入方法即可
     //根据uid读取数据，uid=数据页号+数据在页中偏移量
     DataItem read(long uid) throws Exception;
-    //插入数据设计修改，需要传入事务id和插入的数据
+    //插入数据涉及修改，需要传入事务id和插入的数据
     long insert(long xid, byte[] data) throws Exception;
     void close();
 
@@ -38,6 +38,7 @@ public interface DataManager {
             Recover.recover(tm, lg, pc);
         }
         dm.fillPageIndex();
+        //校验完毕之后把第一页数据修改成异常退出的格式，如果正常退出我们会将其改为正常退出格式
         PageOne.setVcClose(dm.pageOne);
         dm.pc.flushPage(dm.pageOne);
         return dm;

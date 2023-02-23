@@ -1,7 +1,6 @@
 package com.xjx.mydb.server.dm.dataItem;
 
 import com.google.common.primitives.Bytes;
-import com.sun.deploy.security.ValidationState;
 import com.xjx.mydb.server.common.SubArray;
 import com.xjx.mydb.server.dm.DataManagerImpl;
 import com.xjx.mydb.server.dm.page.Page;
@@ -40,10 +39,13 @@ public interface DataItem {
         byte[] size = Parser.short2Byte((short)raw.length);
         return Bytes.concat(valid, size, raw);
     }
+
     // 从页面的offset处解析处dataitem
     public static DataItem parseDataItem(Page pg, short offset, DataManagerImpl dm) {
         byte[] raw = pg.getData();
+        //获取数据的长度
         short size = Parser.parseShort(Arrays.copyOfRange(raw, offset + DataItemImpl.OF_SIZE, offset + DataItemImpl.OF_DATA));
+        //数据实际长度=数据长度+头信息
         short length = (short)(size + DataItemImpl.OF_DATA);
         long uid = Types.addressToUid(pg.getPageNumber(), offset);
         return new DataItemImpl(new SubArray(raw, offset, offset + length), new byte[length], pg, uid, dm);

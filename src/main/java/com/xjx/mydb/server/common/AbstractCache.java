@@ -9,18 +9,19 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @Author: Xjx
  * @Create: 2022/12/22 - 14:29
- * AbstractCache 实现了一个引用计数策略的缓存框架，管理缓存用的。泛型类，泛型是缓存的数据类型
+ * AbstractCache实现了一个引用计数策略的缓存框架，管理缓存用的。泛型类，泛型是缓存的数据类型
  */
 public abstract class AbstractCache<T> {
-    // 实际缓存的数据，key为磁盘上实际数据的地址，value为缓存真实数据
+    // 实际缓存的数据，key的意义并不明确，因为这是一个框架，其实现类可能很多，那么key的意义也就不同（比如对于PageCache来说key就是页号）
+    // value为缓存真实数据
     private HashMap<Long, T> cache;
-    // 具体缓存数据的引用个数
+    // 具体某个缓存数据的引用个数
     private HashMap<Long, Integer> references;
     // 记录哪些资源正在从数据源中获取。因为从数据源获取资源是一个相对费时的操作
     private HashMap<Long, Boolean> getting;
     // 缓存的最大缓存大小
     private int maxResource;
-    // 缓存中缓存的个数
+    // 缓存中缓存数据的个数
     private int count = 0;
     private Lock lock;
 
@@ -31,6 +32,7 @@ public abstract class AbstractCache<T> {
         getting = new HashMap<>();
         lock = new ReentrantLock();
     }
+
     protected synchronized T get(long key) throws Exception {
         //通过 get() 方法获取资源时，首先进入一个死循环，来无限尝试从缓存里获取
         while (true) {
@@ -92,7 +94,7 @@ public abstract class AbstractCache<T> {
     }
 
     /**
-     * 根据key即数据源上数据地址强行释放一个其对应的缓存数据
+     * 根据key强行释放一个其对应的缓存数据。key对于PageCache来说=页号
      */
     protected void release(long key) {
         lock.lock();

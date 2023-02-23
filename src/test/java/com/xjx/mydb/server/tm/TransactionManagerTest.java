@@ -27,13 +27,6 @@ public class TransactionManagerTest {
     private CountDownLatch cdl;
 
     @Test
-    public void te1stMultiThread() {
-        int ra = random.nextInt(Integer.MAX_VALUE);
-        System.out.println(ra);
-        ra = ra % 2 + 1;
-        System.out.println(ra);
-    }
-    @Test
     public void testMultiThread() {
         tm = TransactionManager.create("D:\\JavaProject\\MyDB\\tmp\\trans_test");
         //统计一共执行过多少个事务
@@ -60,7 +53,6 @@ public class TransactionManagerTest {
         for(int i = 0; i < noWorks; i++){
             //这里为了模拟生产环境中事务的出现比率，所以给每一个事务随机取一个0-5的数
             int op = Math.abs(random.nextInt(6));
-            System.out.println(op);
             //如果随机出的是0，那么表示此时要执行的操作需要进行事务处理
             if(op == 0){
                 //此时为了保证操作多线程安全所以需要加锁

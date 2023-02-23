@@ -22,7 +22,7 @@ public class TransactionManagerImpl implements TransactionManager {
     private static final byte FIELD_TRAN_ACTIVE = 0;
     private static final byte FIELD_TRAN_COMMITTED = 1;
     private static final byte FIELD_TRAN_ABORTED = 2;
-    //file和fc应该是Nio读取文件的两个类对象。file是读取之后的xid文件
+    //file和fc是Nio读取文件的两个类对象。file是读取之后的xid文件
     private RandomAccessFile file;
     private FileChannel fc;
     //xid文件头的事务个数
@@ -65,7 +65,7 @@ public class TransactionManagerImpl implements TransactionManager {
         }
         //因为字节缓冲区中的值我们无法直接读出来，所以使用解析器解析成long类型
         this.xidCounter = Parser.parseLong(buf.array());
-        //获取最后一个事务所在地址，+1是因为还有一个0号超级事务
+        //获取最后一个事务所在地址，+1是因为还有一个0号超级事务即XID文件默认最少有一个超级事务
         long end = getXidPosition(this.xidCounter + 1);
         //如果最后一个事务的地址即文件理论长度不等于文件实际长度那么就认为这个XID文件不合法，直接强制停机，并报XID文件错误
         if(end != fileLen) {
@@ -79,7 +79,6 @@ public class TransactionManagerImpl implements TransactionManager {
     }
 
     // 开始一个事务，并返回这个新增事务的XID
-    // TODO: 2023/2/16 系统暂时没有实现事务功能
     @Override
     public long begin() {
         //开始事务过程需要加锁，需要保证下面过程不能出现并发问题，否则事务服务就会出错
@@ -158,6 +157,7 @@ public class TransactionManagerImpl implements TransactionManager {
 
     // 检测XID事务是否处于status状态
     private boolean checkXID(long xid, byte status) {
+        //根据要比较的事务id去XID文件中取出对应事务的状态
         long offset = getXidPosition(xid);
         ByteBuffer buffer = ByteBuffer.wrap(new byte[XID_FIELD_SIZE]);
         try {
@@ -169,6 +169,7 @@ public class TransactionManagerImpl implements TransactionManager {
         return buffer.array()[0] == status;
     }
 
+    //TM关闭时断开与XID文件的IO连接
     @Override
     public void close() {
         try {

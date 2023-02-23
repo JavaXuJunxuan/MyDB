@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class PageX {
     //空闲空间偏移量的起始地址
     private static final short OF_FREE = 0;
-    //空闲空间偏移量大小为两个字节
+    //空闲空间偏移量大小为两个字节也代表着实际数据的起始地址
     private static final short OF_DATA = 2;
     //最大空闲空间大小
     public static final int MAX_FREE_SPACE = PageCache.PAGE_SIZE - OF_DATA;

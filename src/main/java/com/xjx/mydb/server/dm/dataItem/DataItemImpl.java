@@ -22,7 +22,7 @@ public class DataItemImpl implements DataItem {
     //实际数据的存储起始地址为数据文件的第四字节处
     static final int OF_DATA = 3;
 
-    //数据对象的数据与内存数据共享同一段内存
+    //数据对象的数据与数据页中的内存数据共享同一段内存
     private SubArray raw;
     private byte[] oldRaw;
     private Lock rLock;

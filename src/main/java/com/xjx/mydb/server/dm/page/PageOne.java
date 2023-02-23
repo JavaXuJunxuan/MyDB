@@ -18,7 +18,6 @@ public class PageOne {
     //数据库文件中启动检查的数据长度
     private static final int LEN_VC = 8;
 
-
     public static byte[] InitRaw() {
         //数据库文件启动时首先模拟出第一页缓存数据页
         byte[] raw = new byte[PageCache.PAGE_SIZE];

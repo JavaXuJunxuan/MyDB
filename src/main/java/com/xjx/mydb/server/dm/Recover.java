@@ -56,7 +56,7 @@ public class Recover {
             byte[] log = lg.next();
             //如果没有下一个日志了就表示当前日志文件所有可恢复的日志都以恢复完毕
             if(log == null) break;
-            //
+            //插入日志中插入数据的页号
             int pgno;
             //日志只有两种：1是插入2是更新。判断类型之后将日志解析为对应日志格式
             if(isInsertLog(log)) {
@@ -70,10 +70,11 @@ public class Recover {
                 maxPgno = pgno;
             }
         }
+        //这里如果是一个空日志文件则要设置最大页号为1，因为数据库文件第一页不保存数据，不能删除
         if(maxPgno == 0) {
             maxPgno = 1;
         }
-        //然后根据所操作的最大数据页号获取其实际地址然后根据这个最大地址截断日志文件
+        //然后根据所操作的最大数据页号获取其实际地址然后根据这个最大地址截断数据库文件
         pc.truncateByBgno(maxPgno);
         System.out.println("Truncate to" + maxPgno + "pages.");
         //开始恢复数据库，至于是重做还是撤销由恢复方法自行判断（tm.isActive(xid)判断对应事务状态）

@@ -50,6 +50,12 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         this.pageNumbers = new AtomicInteger((int)length / PAGE_SIZE);
     }
 
+    //根据页号获取数据页，调用的是缓存框架AbstractCache的方法，如果缓存中有从缓存取，如果缓存没有去数据库取。
+    @Override
+    public Page getPage(int pgno) throws Exception {
+        return get((long) pgno);
+    }
+
     //给当前缓存页新增的缓存数据创建新的缓存页，即新建的缓存数据在原有页中存不下了，需要新建数据页
     @Override
     public int newPage(byte[] initData) {
@@ -61,6 +67,12 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         flush(page);
         return pgno;
     }
+
+    @Override
+    public void flushPage(Page pg) {
+        flush(pg);
+    }
+
     //将参数传来的缓存数据页刷回数据库文件
     private void flush(Page page) {
         int pgno = page.getPageNumber();
@@ -82,11 +94,6 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
 
     private static long pageOffset(int pgno) {
         return (pgno - 1) * PAGE_SIZE;
-    }
-
-    @Override
-    public Page getPage(int pgno) throws Exception {
-        return get((long) pgno);
     }
 
     @Override
@@ -146,7 +153,7 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         } catch (IOException ioException) {
             Panic.panic(ioException);
         }
-        //设置数据库文件最大数据页数
+        //设置数据库文件最大数据页数，至少为1页
         pageNumbers.set(maxPgno);
     }
 
@@ -156,8 +163,5 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
         return pageNumbers.intValue();
     }
 
-    @Override
-    public void flushPage(Page pg) {
-        flush(pg);
-    }
+
 }
