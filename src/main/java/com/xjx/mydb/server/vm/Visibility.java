@@ -8,14 +8,17 @@ import com.xjx.mydb.server.tm.TransactionManager;
  */
 public class Visibility {
 
+    //判断版本跳跃问题，这个问题只针对于可重复度隔离级别，因为可重复读执行期间其他事务的改动数据它看不到所以版本不会更新
     public static boolean isVersionSkip(TransactionManager tm, Transaction t, Entry e){
+        //取出要修改记录的最新版本
         long xmax = e.getXmax();
-        //如果是读已提交级别则无需跳过
+        //如果是读已提交级别则可以直接返回false表示没有版本跳跃
         if(t.level == 0){
             return false;
         } else {
-            //如果当前记录被删除且删除操作的事务提交并且
-            //删除操作的事务在该操作之后或者删除事务处于当前事务开启时的活跃事务，都为true则需要跳过该版本
+            //如果为可重复读隔离界别
+            //那么需要判断删除当前记录的事务是否提交并且是否在当前事务之后提交或是在活跃快照中
+            //如果是则true表示发生了版本跳跃
             return tm.isCommitted(xmax) && (xmax > t.xid || t.isInSnapshot(xmax));
         }
     }
@@ -29,6 +32,7 @@ public class Visibility {
         }
     }
 
+    //不同隔离级别下的可见性判断是不一样的
     public static boolean readCommitted(TransactionManager tm, Transaction t, Entry e){
         long xid = t.xid;
         long xmin = e.getXmin();
