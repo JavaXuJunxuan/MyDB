@@ -40,7 +40,7 @@ public interface DataItem {
         return Bytes.concat(valid, size, raw);
     }
 
-    // 从页面的offset处解析处dataitem
+    //从页面的offset处解析处dataItem
     public static DataItem parseDataItem(Page pg, short offset, DataManagerImpl dm) {
         byte[] raw = pg.getData();
         //获取数据的长度

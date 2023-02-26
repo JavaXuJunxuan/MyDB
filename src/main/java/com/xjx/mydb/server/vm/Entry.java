@@ -34,7 +34,7 @@ public class Entry {
         return entry;
     }
 
-    //根据一个uid和一个版本管理器加载一条记录
+    //根据一个uid和一个版本管理器加载一条记录，记录存在数据项中，所以最后会调用dm从缓存中取数据项
     public static Entry loadEntry(VersionManager vm, long uid) throws Exception {
         DataItem di = ((VersionManagerImpl)vm).dm.read(uid);
         return newEntry(vm, di, uid);

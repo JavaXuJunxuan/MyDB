@@ -16,7 +16,7 @@ public class Transaction {
     //创建该事务时的其他事务是否活跃的快照
     public Map<Long, Boolean> snaphot;
     public Exception err;
-    public boolean antoAborted;
+    public boolean autoAborted;
 
     //创建新事务，用于保存快照数据的。但是如果是读已提交则无需保存快照数据
     public static Transaction newTransaction(long xid, int level, Map<Long, Transaction> active) {
