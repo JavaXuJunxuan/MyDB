@@ -65,7 +65,7 @@ public class TransactionManagerImpl implements TransactionManager {
         }
         //因为字节缓冲区中的值我们无法直接读出来，所以使用解析器解析成long类型
         this.xidCounter = Parser.parseLong(buf.array());
-        //获取最后一个事务所在地址，+1是因为还有一个0号超级事务即XID文件默认最少有一个超级事务
+        //获取最后一个事务所在地址，+1是因为还有一个0号超级事务即XID文件默认最少有一个超级事务且要计算的地址是事务结束地址因为比较长度
         long end = getXidPosition(this.xidCounter + 1);
         //如果最后一个事务的地址即文件理论长度不等于文件实际长度那么就认为这个XID文件不合法，直接强制停机，并报XID文件错误
         if(end != fileLen) {

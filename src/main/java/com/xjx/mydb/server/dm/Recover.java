@@ -281,7 +281,8 @@ public class Recover {
                 //这里并非物理删除，而是逻辑删除
                 DataItem.setDataItemRawInvalid(li.raw);
             }
-            //执行到此处表示redo，执行插入操作
+            //无论redo还是undo都会执行下面的方法，因为dm没有删除操作，删除只是利用更新操作将数据项有效位标志改为无效
+            //因此undo会将有效位改为无效，redo则不会，但最终这个数据都会插入到数据页中
             PageX.recoverInsert(page, li.raw, li.offset);
         } finally {
           page.release();

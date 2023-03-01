@@ -48,6 +48,7 @@ public interface DataItem {
         //数据实际长度=数据长度+头信息
         short length = (short)(size + DataItemImpl.OF_DATA);
         long uid = Types.addressToUid(pg.getPageNumber(), offset);
+        //返回的数据项中raw就是SubArray，即start就是偏移量，end就是数据项长度
         return new DataItemImpl(new SubArray(raw, offset, offset + length), new byte[length], pg, uid, dm);
     }
 

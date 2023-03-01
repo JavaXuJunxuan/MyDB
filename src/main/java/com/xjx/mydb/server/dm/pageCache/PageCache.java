@@ -26,7 +26,7 @@ public interface PageCache {
     //关闭数据页缓存，此时释放所有数据页缓存并写回
     void close();
     //根据传入的数据缓存页释放其缓存数据
-    void  release(Page page);
+    void release(Page page);
     //根据最大数据页号截断数据页
     void truncateByBgno(int maxPgno);
     //获取该缓存数据的缓存数据页号
@@ -34,7 +34,7 @@ public interface PageCache {
     //根据传入的数据页刷新缓存数据
     void flushPage(Page pg);
 
-    //该方法用于根据传入的地址及内存大小创建出新的缓存数据页并返回缓存数据对象
+    //该方法用于根据传入的地址及内存大小创建出新的缓存数据页并返回缓存数据对象，对应的是数据库DB文件
     public static PageCacheImpl create(String path, long memory) {
         File file = new File(path + PageCacheImpl.DB_SUFFIX);
         try {

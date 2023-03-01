@@ -29,6 +29,7 @@ public class DataItemImpl implements DataItem {
     private Lock wLock;
     //一个引用指向了DM，通过DM来管理数据项，比如缓存DataItem和释放DataItem
     private DataManagerImpl dm;
+    //这是数据项的唯一标识，uid=页号+偏移量
     private long uid;
     private Page pg;
 
@@ -66,7 +67,6 @@ public class DataItemImpl implements DataItem {
     public void unBefore() {
         System.arraycopy(oldRaw, 0, raw.raw, raw.start, oldRaw.length);
         wLock.unlock();
-
     }
 
     @Override

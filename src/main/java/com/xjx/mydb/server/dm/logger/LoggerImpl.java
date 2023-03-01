@@ -103,7 +103,7 @@ public class LoggerImpl implements Logger {
         for(byte b : log) {
             xCheck = xCheck * SEED + b;
         }
-        return  xCheck;
+        return xCheck;
     }
 
     //Logger被实现成迭代器模式，通过 next() 方法不断地从文件中读取下一条日志

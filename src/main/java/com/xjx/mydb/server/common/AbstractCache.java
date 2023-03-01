@@ -19,7 +19,7 @@ public abstract class AbstractCache<T> {
     private HashMap<Long, Integer> references;
     // 记录哪些资源正在从数据源中获取。因为从数据源获取资源是一个相对费时的操作
     private HashMap<Long, Boolean> getting;
-    // 缓存的最大缓存大小
+    // 缓存的最大缓存个数
     private int maxResource;
     // 缓存中缓存数据的个数
     private int count = 0;

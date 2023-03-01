@@ -74,6 +74,7 @@ public interface Logger {
             Panic.panic(e);
         }
         LoggerImpl log = new LoggerImpl(raf, fc);
+        //对日志文件进行安全性校验
         log.init();
         return log;
     }

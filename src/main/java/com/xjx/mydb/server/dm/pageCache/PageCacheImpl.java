@@ -31,7 +31,7 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
     private AtomicInteger pageNumbers;
 
     public PageCacheImpl(RandomAccessFile raf, FileChannel fc, int maxResource) {
-        //执行父类AbstractCache的有参构造，设定最大缓存内存大小
+        //执行父类AbstractCache的有参构造，设定最大缓存数据个数
         super(maxResource);
         //如果分配的数据缓存页小于最小的缓存页则退出
         if(maxResource < MEM_MIN_LEN) {

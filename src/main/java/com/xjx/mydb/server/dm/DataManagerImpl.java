@@ -37,7 +37,7 @@ public class DataManagerImpl extends AbstractCache<DataItem> implements DataMana
     //根据一个处理过的数据项的uid解析为对应的页号+偏移量并得到该数据转移成数据项返回
     @Override
     protected DataItem getForCache(long uid) throws Exception {
-        short offset = (short)(uid & ((1L << 32)) - 1);
+        short offset = (short)(uid & ((1L << 16)) - 1);
         uid >>>= 32;
         int pgno = (int)(uid & ((1L << 32) - 1));
         Page page = pc.getPage(pgno);
@@ -65,7 +65,7 @@ public class DataManagerImpl extends AbstractCache<DataItem> implements DataMana
     //插入操作，返回值是一个uid即页号+偏移量
     @Override
     public long insert(long xid, byte[] data) throws Exception {
-        //讲一个要插入的数据包装成数据库中数据格式
+        //将一个要插入的数据包装成数据库中数据格式
         byte[] raw = DataItem.wrapDataItemRaw(data);
         //如果要插入的数据比数据页最大空闲内存都大则报错
         if(raw.length > PageX.MAX_FREE_SPACE) {
