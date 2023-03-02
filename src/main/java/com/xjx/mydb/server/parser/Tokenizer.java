@@ -50,7 +50,7 @@ public class Tokenizer {
         flushToken = true;
     }
 
-    //返回下一个将要遍历的token
+    //返回下一个将要遍历的token,如果之后没有token了，会返回一个空字符
     private String next() throws Exception {
         if(err != null) {
             throw err;
@@ -137,7 +137,7 @@ public class Tokenizer {
         return sb.toString();
     }
 
-    //出现错误时将错误信息加到stat中
+    //出现错误时将错误信息加到stat中,下面的箭头标出了SQL语句错误出现位置
     public byte[] errStat() {
         //创建一个大小等于stat长度+3的字节数组
         byte[] res = new byte[stat.length + 3];

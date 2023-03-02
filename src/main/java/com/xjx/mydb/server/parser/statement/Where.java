@@ -9,5 +9,5 @@ import javafx.beans.binding.StringExpression;
 public class Where {
     public SingleExpression singleExp1;
     public String logicOp;
-    public StringExpression stringExp2;
+    public SingleExpression singleExp2;
 }
