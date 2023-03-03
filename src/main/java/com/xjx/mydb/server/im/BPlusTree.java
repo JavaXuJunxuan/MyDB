@@ -117,7 +117,7 @@ public class BPlusTree {
     }
 
     //根据左右key边界范围查找
-    private List<Long> searchRange(long leftKey, long rightKey) throws Exception {
+    public List<Long> searchRange(long leftKey, long rightKey) throws Exception {
         long rootUid = rootUid();
         //找到叶子节点，因为数据保存在叶子节点中
         long leafUid = searchLeaf(rootUid, leftKey);
