@@ -15,6 +15,10 @@ import java.util.List;
 /**
  * @Author: Xjx
  * @Create: 2023/2/8 - 11:29
+ * Field 表示字段信息
+ * 二进制格式为：
+ * [FieldName][TypeName][IndexUid]
+ * 如果field无索引，IndexUid为0
  */
 public class Field {
     //字段上索引对应的索引二叉树的根节点的uid
@@ -81,7 +85,7 @@ public class Field {
         if(indexed) {
             //如果字段有索引，就去这个表中穿件一个索引树出来
             long index = BPlusTree.create(((TableManagerImpl)tb.tbm).dm);
-            BPlusTree bt = BPlusTree.load(index, ((TableManagerImpl)tb.tbm));
+            BPlusTree bt = BPlusTree.load(index, ((TableManagerImpl)tb.tbm).dm);
             f.index = index;
             f.bt = bt;
         }
