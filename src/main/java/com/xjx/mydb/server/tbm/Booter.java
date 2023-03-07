@@ -51,7 +51,7 @@ public class Booter {
     }
 
     private static void removeBadTmp(String path) {
-        new File(path + BOOTER_SUFFIX).delete();
+        new File(path + BOOTER_TMP_SUFFIX).delete();
     }
 
     private Booter(String path, File file) {
