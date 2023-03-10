@@ -3,13 +3,14 @@ package com.xjx.mydb.server.vm;
 
 import com.xjx.mydb.server.utils.Panic;
 import org.junit.Test;
-
 import java.util.concurrent.locks.Lock;
-
 import static org.junit.Assert.assertThrows;
 
+/**
+ * @Author: Xjx
+ * @Create: 2023/2/19 - 11:32
+ */
 public class LockTableTest {
-
     @Test
     public void testLockTable() {
         LockTable lt = new LockTable();
