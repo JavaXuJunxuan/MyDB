@@ -18,7 +18,7 @@ public class PageX {
     //最大空闲空间大小
     public static final int MAX_FREE_SPACE = PageCache.PAGE_SIZE - OF_DATA;
 
-    //操作数据页时模拟出一个数据页
+    //初始化一个新的普通页
     public static byte[] initRaw() {
         byte[] raw = new byte[PageCache.PAGE_SIZE];
         setFSO(raw, OF_DATA);

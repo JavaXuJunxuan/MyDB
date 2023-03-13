@@ -39,7 +39,7 @@ public interface DataManager {
         }
         dm.fillPageIndex();
         //校验完毕之后把第一页数据修改成异常退出的格式，如果正常退出我们会将其改为正常退出格式
-        PageOne.setVcClose(dm.pageOne);
+        PageOne.setVcOpen(dm.pageOne);
         dm.pc.flushPage(dm.pageOne);
         return dm;
     }

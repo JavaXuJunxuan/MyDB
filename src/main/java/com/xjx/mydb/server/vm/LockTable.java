@@ -109,7 +109,7 @@ public class LockTable {
         //取出等待这个uid资源的xid列表
         List<Long> l = wait.get(uid);
         if(l == null) return;
-        //assert l.size() > 0;
+        assert l.size() > 0;
         //如果列表不为空且有元素表示有xid等待这个uid
         while (l.size() > 0) {
             //从列表中取出第一个等待这个uid资源的xid事务即公平锁

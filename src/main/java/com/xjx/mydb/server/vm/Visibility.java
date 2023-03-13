@@ -8,7 +8,7 @@ import com.xjx.mydb.server.tm.TransactionManager;
  */
 public class Visibility {
 
-    //判断版本跳跃问题，这个问题只针对于可重复度隔离级别，因为可重复读执行期间其他事务的改动数据它看不到所以版本不会更新
+    //判断版本跳跃问题，这个问题只针对于可重复读隔离级别，因为可重复读执行期间其他事务的改动数据它看不到所以版本不会更新
     public static boolean isVersionSkip(TransactionManager tm, Transaction t, Entry e){
         //取出要修改记录的最新版本
         long xmax = e.getXmax();

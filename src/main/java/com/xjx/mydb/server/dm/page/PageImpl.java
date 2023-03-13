@@ -8,7 +8,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @Author: Xjx
  * @Create: 2022/12/23 - 10:02
  */
-//这是缓存数据页接口的实现类，其实例是放在内存中。这个实现类定义了一些缓存数据页的参数信息，具体缓存数据放在缓存页对象pc中
+//这是缓存数据页接口的实现类，其实例是放在内存中。这个实现类定义了一些缓存数据页的参数信息，pc引用是用来释放page缓存的
+//因为缓存是存放在PC中的
 public class PageImpl implements Page {
     //数据页的页号，从1开始
     private int pageNumber;

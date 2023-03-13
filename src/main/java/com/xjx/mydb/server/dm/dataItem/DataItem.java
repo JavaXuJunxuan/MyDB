@@ -33,7 +33,7 @@ public interface DataItem {
     byte[] getOldRaw();
     SubArray getRaw();
 
-    //将读取到的字节数据包装成一个Java可以操作的数据项对象返回
+    //将读取到的字节数据包装成数据库中数据项对应的字节数组格式返回
     public static byte[] wrapDataItemRaw(byte[] raw) {
         byte[] valid = new byte[1];
         byte[] size = Parser.short2Byte((short)raw.length);

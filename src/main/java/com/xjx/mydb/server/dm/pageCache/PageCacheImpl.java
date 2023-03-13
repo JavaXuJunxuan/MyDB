@@ -162,6 +162,4 @@ public class PageCacheImpl extends AbstractCache<Page> implements PageCache{
     public int getPageNumber() {
         return pageNumbers.intValue();
     }
-
-
 }

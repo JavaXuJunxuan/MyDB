@@ -34,7 +34,6 @@ public class VersionManagerImpl extends AbstractCache<Entry> implements VersionM
         this.lt = new LockTable();
     }
 
-
     //读取一个Entry，需要判断可见性
     @Override
     public byte[] read(long xid, long uid) throws Exception {
@@ -226,6 +225,6 @@ public class VersionManagerImpl extends AbstractCache<Entry> implements VersionM
 
     @Override
     protected void releaseForCache(Entry entry) {
-        entry.release();
+        entry.remove();
     }
 }

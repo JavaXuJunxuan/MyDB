@@ -78,6 +78,7 @@ public class LoggerImpl implements Logger {
         this.xChecksum = xChecksum;
         checkAndRemoveTail();
     }
+
     //检查并移除bad tail
     private void checkAndRemoveTail() {
         rewind();
@@ -201,7 +202,7 @@ public class LoggerImpl implements Logger {
         updateXChecksum(log);
     }
 
-    //截断指定长度的当前文件
+    //截断指定长度的当前文件，用于移除日志文件末尾的badtail
     @Override
     public void truncate(long x) throws Exception {
         lock.lock();
