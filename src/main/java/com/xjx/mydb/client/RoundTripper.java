@@ -14,7 +14,7 @@ public class RoundTripper {
         this.packager = packager;
     }
 
-    //收发数据
+    //通过之前连接的socket收发数据
     public Package roundTrip(Package pack) throws Exception {
         packager.send(pack);
         return packager.receive();

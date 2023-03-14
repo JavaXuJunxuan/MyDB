@@ -55,9 +55,7 @@ public class Server {
         } finally {
             try {
                 ss.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            } catch (IOException ioException) {}
         }
     }
 
@@ -86,6 +84,12 @@ public class Server {
                 packager = new Packager(t, encoder);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return;
             }
             Executor executor = new Executor(tbm);
             while (true) {

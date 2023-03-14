@@ -75,7 +75,6 @@ public class Table {
         this.nextUid = nextUid;
     }
 
-
     //解析一段表数据（格式在开头）
     private Table parseSelf(byte[] raw) {
         int position = 0;
@@ -157,7 +156,7 @@ public class Table {
         return count;
     }
 
-    //根据查询语句中的表明字段和过滤条件读数据
+    //根据查询语句中的表名字段和过滤条件读数据
     public String read(long xid, Select read) throws Exception {
         //解析where语句找出符合条件的记录
         List<Long> uids = parseWhere(read.where);
@@ -218,6 +217,9 @@ public class Table {
                     break;
                 }
             }
+            l0 = 0;
+            r0 = Long.MAX_VALUE;
+            single = true;
         } else {
             //where不为null则表示有过滤条件，则此时where中的语句必有索引，因为MyDB只能支持索引查找
             for(Field field : fields) {
@@ -287,7 +289,7 @@ public class Table {
                 if(res.r1 < res.r0) res.r0 = res.r1;
                 break;
             default:
-                throw Error.InvalidCommandException;
+                throw Error.InvalidLogOpException;
         }
         return res;
     }
@@ -333,13 +335,13 @@ public class Table {
     public String toString() {
         StringBuilder sb = new StringBuilder("{");
         //表名
-        sb.append(name).append(":");
+        sb.append(name).append(" ");
         for(Field field : fields) {
             sb.append(field.toString());
             if(field == fields.get(fields.size() - 1)) {
                 sb.append("}");
             } else {
-                sb.append(",");
+                sb.append(", ");
             }
         }
         return sb.toString();

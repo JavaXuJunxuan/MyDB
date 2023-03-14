@@ -23,6 +23,7 @@ public class Executor {
     public void close() {
         if(xid != 0) {
             System.out.println("Abnormal Abort: " + xid);
+            tbm.abort(xid);
         }
     }
 

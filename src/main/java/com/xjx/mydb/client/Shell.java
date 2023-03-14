@@ -24,6 +24,7 @@ public class Shell {
                     break;
                 }
                 try {
+                    //接收用户命令行写入的SQL语句然后执行
                     byte[] res = client.execute(statStr.getBytes());
                     System.out.println(new String(res));
                 } catch (Exception e) {

@@ -36,7 +36,8 @@ public class LockTable {
 
     // 不需要等待则返回null，否则返回锁对象
     // 会造成死锁则抛出异常
-    //向某个xid事务中加入uid资源
+    //向某个xid事务中加入uid资源， 在这一步会进行死锁判断，因为死锁只会出现在我们添加新资源之后
+    //想持有的这个新资源已经被其他线程持有了，并且自己还持有这个持有新资源的线程所需的其他资源
     public Lock add(long xid, long uid) throws Exception {
         lock.lock();
         try {
@@ -134,6 +135,7 @@ public class LockTable {
     //一个访问戳，用来判断是否成环即死锁的
     private int stamp;
 
+    //这里进行死锁检测，取出所有持有uid资源的事务
     private boolean hasDeadLock() {
         xidStamp = new HashMap<>();
         stamp = 1;
@@ -144,6 +146,7 @@ public class LockTable {
             if(s != null && s > 0) {
                 continue;
             }
+            //没有访问过则深搜当前这个事务
             stamp++;
             if(dfs(xid)) {
                 return true;
@@ -152,19 +155,23 @@ public class LockTable {
         return false;
     }
 
-    //对
+    //对事务进行深度优先遍历
     private boolean dfs(long xid) {
         //取出这个事务的访问戳
         Integer stp = xidStamp.get(xid);
-        //有访问戳且=stamp表示之前访问过该节点则死锁
+        //有访问戳且=stamp表示此次深搜访问过该节点则死锁，stamp是递增的，这里会相等是因为当前正在遍历的事务的某个资源被其他事务持有时出现了环
+        //深搜又回头了最开始深搜的节点，即环即循环依赖
         if(stp != null && stp == stamp) {
             return true;
         }
+        //如果小于当前这个stamp则表示这个xid的stp是之前深搜时赋的值，则不会出现死锁现象。
         if(stp != null && stp < stamp) {
             return false;
         }
+        //stp为null表示之前没有访问过这个事务
         xidStamp.put(xid, stamp);
         //看一下这个深搜的xid是否正在等待某个uid资源：没有等待则一定不会死锁
+        //这里就是死锁判断的真正逻辑
         Long uid = waitU.get(xid);
         if(uid == null) return false;
         //执行到这里表示当前xid事务在等待某个uid资源则判断一下这个uid资源是否被其他事务占有

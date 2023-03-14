@@ -252,9 +252,9 @@ public class Field {
     public String toString() {
         return new StringBuilder("(")
                 .append(fieldName)
-                .append(",")
+                .append(", ")
                 .append(fieldType)
-                .append(index != 0 ? ",Index":"NoIndex")
+                .append(index != 0 ? ", Index":", NoIndex")
                 .append(")")
                 .toString();
     }

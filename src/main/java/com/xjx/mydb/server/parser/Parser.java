@@ -64,7 +64,7 @@ public class Parser {
             String next = tokenizer.peek();
             if(!"".equals(next)) {
                 byte[] errStat = tokenizer.errStat();
-                statErr = new RuntimeException("Invalid statment: " + new String(errStat));
+                statErr = new RuntimeException("Invalid statement: " + new String(errStat));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,7 +246,7 @@ public class Parser {
         SingleExpression exp = new SingleExpression();
 
         String field = tokenizer.peek();
-        if(isName(field)) {
+        if(!isName(field)) {
             throw Error.InvalidCommandException;
         }
         exp.field = field;
@@ -335,7 +335,7 @@ public class Parser {
                 throw Error.InvalidCommandException;
             }
         }
-        //退出循环表示建表字段都遍历完了，接下来遍历索引，每张表中都有一个索引，因为mydb只支持索引查询
+        //退出循环表示建表字段都遍历完了，接下来遍历索引，每张表中都有一个索引，因为MyDB 只支持索引查询
         create.fieldName = fNames.toArray(new String[fNames.size()]);
         create.fieldType = fTypes.toArray(new String[fTypes.size()]);
         tokenizer.pop();

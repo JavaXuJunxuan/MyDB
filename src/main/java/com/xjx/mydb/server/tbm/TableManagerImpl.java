@@ -21,6 +21,7 @@ public class TableManagerImpl implements TableManager {
     //tbm基于vm来查询表和字段数据的
     VersionManager vm;
     DataManager dm;
+    //对于数据库的启动文件对象的一个引用，启动文件中存储着数据库的头表id，因为数据库表是通过链表形式连接在一起的。
     private Booter booter;
     private Map<String, Table> tableCache;
     private Map<Long, List<Table>> xidTableCache;
@@ -119,7 +120,7 @@ public class TableManagerImpl implements TableManager {
             }
             xidTableCache.get(xid).add(table);
             //返回建表成功语句
-            return ("create" + create.tableName).getBytes();
+            return ("create table: " + create.tableName).getBytes();
         } finally {
             lock.unlock();
         }
@@ -132,7 +133,7 @@ public class TableManagerImpl implements TableManager {
         Table table = tableCache.get(insert.tableName);
         lock.unlock();
         if(table == null) {
-            throw Error.TableNoIndexException;
+            throw Error.TableNotFoundException;
         }
         table.insert(xid, insert);
         return "insert".getBytes();
@@ -145,7 +146,7 @@ public class TableManagerImpl implements TableManager {
         Table table = tableCache.get(read.tableName);
         lock.unlock();
         if(table == null) {
-            throw Error.TableNoIndexException;
+            throw Error.TableNotFoundException;
         }
         return table.read(xid, read).getBytes();
     }
@@ -157,7 +158,7 @@ public class TableManagerImpl implements TableManager {
         Table table = tableCache.get(update.tableName);
         lock.unlock();
         if(table == null) {
-            throw Error.TableNoIndexException;
+            throw Error.TableNotFoundException;
         }
         int count = table.update(xid, update);
         return ("update" + count).getBytes();

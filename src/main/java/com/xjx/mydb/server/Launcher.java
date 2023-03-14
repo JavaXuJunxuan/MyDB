@@ -40,6 +40,8 @@ public class Launcher {
             return;
         }
         System.out.println("Usage: launcher (open|create) DBPath");
+//        createDB("D:\\JavaProject\\MyDB\\tmp\\mydb");
+//        openDB("D:\\JavaProject\\MyDB\\tmp\\mydb",parseMem("128MB"));
     }
 
     //根据路径创建一个数据库文件
@@ -73,9 +75,9 @@ public class Launcher {
             case "KB":
                 return memNum * KB;
             case "MB":
-                return memNum * KB;
+                return memNum * MB;
             case "GB":
-                return memNum * KB;
+                return memNum * GB;
             default:
                 Panic.panic(Error.InvalidMemException);
         }
